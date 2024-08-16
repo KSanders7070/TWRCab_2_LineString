@@ -8,7 +8,15 @@ def process_geojson(input_geojson):
     features = []
     
     for feature in input_geojson['features']:
-        geom = shape(feature['geometry'])
+        geom = feature['geometry']
+        
+        # Check if the geometry is None and skip if so
+        if geom is None:
+            print(f"Warning: Skipping feature with None geometry: {feature}")
+            continue
+        
+        geom = shape(geom)
+        
         if geom.geom_type == 'Polygon':
             # Convert Polygon to LineString including the exterior and interiors
             exterior = LineString(geom.exterior.coords)
