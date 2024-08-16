@@ -25,7 +25,7 @@ Install the required Python libraries using pip (the .bat file does this for you
 python -m pip install shapely geojson
 ```
 
-## Usage
+## Usage Options
 
 ### Using the Batch Script
 
