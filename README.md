@@ -25,38 +25,8 @@ Install the required Python libraries using pip (the .bat file does this for you
 python -m pip install shapely geojson
 ```
 
-## Usage Options
+## Usage
 
-### Using the Batch Script
-
-1. **Clone the Repository**:
-
-   ```bash
-   git clone https://github.com/KSanders7070/TWRCab_2_LineString.git
-   cd TWRCab_2_LineString
-   ```
-
-2. **Run the Batch Script**:
-   - Double-click on the `Run_TWRCab_2_LineString.bat` file or run it from the command line:
-
-     ```bash
-     Run_TWRCab_2_LineString.bat
-     ```
-
-3. **Select Input and Output Directories**:
-   - The script will prompt you to select the input directory containing `.geojson` files and the output directory where the converted files will be saved.
-
-4. **Conversion Process**:
-   - The batch script will process all `.geojson` files in the selected input directory, converting all `Polygon` and `MultiPolygon` geometries to `LineString` and `MultiLineString` geometries, respectively.
-   - The output files will be saved in the selected output directory with `_converted` appended to the original filenames.
-
-### Directly Using the Python Script
-
-If you prefer to run the Python script directly, you can do so with the following command:
-
-```bash
-python TWRCab_2_LineString.py <input_file_path> <output_file_path>
-```
-
-- Replace `<input_file_path>` with the path to your GeoJSON file.
-- Replace `<output_file_path>` with the desired path for the converted file.
+1. Download all of your CAB geojson files into a single directory
+2. Download the Run_TWRCab_2_LineString.bat and TWRCab_2_LineString.py (ensure they are in the same directory as each other)
+3. Run the Run_TWRCab_2_LineString.bat file and follow prompts
