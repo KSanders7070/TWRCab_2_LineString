@@ -33,4 +33,5 @@ python -m pip install shapely geojson
 
 ## Notes
 - Though, this script will convert the runway center lines and other like-markings, it doesn't display very well on the ERAM window and it is suggested to import the converted file into something like QGIS and remove excessive lines like that.
-- Support for this script will be very limited so make a backup of your current airport diagram (non-CAB) files and test these converted files prior to replacing them; If past experience serves as any kind of indicator for what is to come, some of you have some very strange CAB files with weird configurations that seem to just work enough to get you buy but my script may not handle your custom `type:MyLineString-I_Like_Pancakes` crap.
+- Support for this script will be very limited so make a backup of your current airport diagram (non-CAB) files and test these converted files prior to replacing them.
+  - If past experience serves as any kind of indicator for what is to come, some of you have some very strange CAB files with weird configurations that seem to just work enough to get you buy but my script may not handle your custom `type:MyLineString-I_Like_Pancakes` crap.
