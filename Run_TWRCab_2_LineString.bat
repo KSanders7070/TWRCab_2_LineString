@@ -4,15 +4,15 @@ setlocal enabledelayedexpansion
 rem Navigate to the directory where the batch file is located
 cd /d "%~dp0"
 
-set testMode=T
+set testMode=F
 if /i "!testMode!"=="T" (
 	set bcg=20
 	set filters=20
 	set "style=solid"
 	set thickness=1
 	set args=!bcg! !filters! !style! !thickness!
-	set "inputDir=C:\Users\ksand\OneDrive\Desktop\PROJFOLDER\TWRCab_2_LineString\original cab files"
-	set "outputDir=C:\Users\ksand\OneDrive\Desktop\PROJFOLDER\TWRCab_2_LineString\converted files"
+	set "inputDir=%userprofile%\Desktop\PROJFOLDER\TWRCab_2_LineString\original cab files"
+	set "outputDir=%userprofile%\Desktop\PROJFOLDER\TWRCab_2_LineString\converted files"
 	goto testStart
 )
 
