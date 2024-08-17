@@ -1,8 +1,20 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: Navigate to the directory where the batch file is located
+rem Navigate to the directory where the batch file is located
 cd /d "%~dp0"
+
+set testMode=T
+if /i "!testMode!"=="T" (
+	set bcg=20
+	set filters=20
+	set "style=solid"
+	set thickness=1
+	set args=!bcg! !filters! !style! !thickness!
+	set "inputDir=C:\Users\ksand\OneDrive\Desktop\PROJFOLDER\TWRCab_2_LineString\original cab files"
+	set "outputDir=C:\Users\ksand\OneDrive\Desktop\PROJFOLDER\TWRCab_2_LineString\converted files"
+	goto testStart
+)
 
 echo.
 echo.
@@ -10,7 +22,7 @@ echo Running System Checks...
 echo.
 echo.
 
-:: Check if TWRCab_2_LineString.py exists in the same directory as the .bat file
+rem Check if TWRCab_2_LineString.py exists in the same directory as the .bat file
 if not exist "%~dp0TWRCab_2_LineString.py" (
     cls
     echo.
@@ -31,7 +43,7 @@ if not exist "%~dp0TWRCab_2_LineString.py" (
     exit /b
 )
 
-:: Check if PowerShell is installed
+rem Check if PowerShell is installed
 powershell -command "exit" >nul 2>&1
 if %errorlevel% neq 0 (
     cls
@@ -127,6 +139,152 @@ if %errorlevel% neq 0 (
     )
 )
 
+:QueryDefaults
+
+cls
+
+rem Prompt user for optional ERAM Defaults to be added
+
+echo                     -------------------
+echo                      CRC ERAM DEFAULTS
+echo                     -------------------
+echo.
+echo      Do you want to add LineDefaults to the converted files
+echo      so that they may be displayed in a CRC-ERAM window?
+echo      -BCG, FILTERS, STYLE, and THICKNESS
+echo.
+echo        Note: The values entered will be applied
+echo              to every exported file.
+echo.
+echo.
+echo.
+set /p AddDefaults=Type Y or N and press Enter: 
+	if /i "!AddDefaults!"=="Y" goto AddDefaults
+	if /i "!AddDefaults!"=="N" goto SelectDirectories
+	goto QueryDefaults
+
+:AddDefaults
+
+:inputBCG
+
+cls
+
+echo.
+echo ERAM BRIGHTNESS CONTROL GROUP "BCG"
+echo.
+set /p bcg=Type a value between 1 and 40 to be assigned to the BCG and press Enter: 
+
+if "!bcg!"=="" goto inputBCG
+for /f "delims=0123456789" %%a in ("!bcg!") do goto inputBCG
+if "!bcg!" lss "1" goto inputBCG
+if "!bcg!" gtr "40" goto inputBCG
+
+:inputFilters
+
+cls
+
+echo.
+echo.
+echo VALUES SET SO FAR...
+echo.
+echo      BCG = "!bcg!"
+echo.
+echo.
+echo.
+echo.
+echo ERAM FILTERS
+echo.
+echo Type a list of filters values between 1 and 40 separated
+echo by commas, if more than one. Spaces are optional.
+echo.
+echo      Example 1: 4
+echo      Example 2: 1, 2, 8, 13, 32
+echo      Example 3: 1,2,8,13,32
+echo.
+set /p filters=Type a list of filters values between 1 and 40 as instructed above, then press Enter: 
+
+rem Remove spaces
+set filters=!filters: =!
+
+rem Check if variable is blank
+if "!filters!"=="" goto inputFilters
+
+rem Parse through the filters string, delimited by commas
+for %%i in (!filters!) do (
+    rem Check if the value contains only numbers
+    for /f "delims=0123456789" %%j in ("%%i") do goto inputFilters
+
+    rem Check if the value is within the valid range
+    if "%%i" lss "1" (
+        goto inputFilters
+    ) else if "%%i" gtr "40" (
+        goto inputFilters
+    )
+)
+
+:inputStyle
+
+cls
+
+echo.
+echo.
+echo VALUES SET SO FAR...
+echo.
+echo      BCG = "!bcg!"
+echo      FILTERS = "!filters!"
+echo.
+echo.
+echo.
+echo.
+echo LINE STYLE
+echo.
+echo      S    - solid
+echo      SD   - shortDashed
+echo      LD   - longDashed
+echo      LDSH - longDashShortDash
+echo.
+set /p styleCode=Type the letter combination associated with your desired style and press Enter: 
+
+if "!styleCode!"=="" goto inputStyle
+if /i "!styleCode!"=="S" set "style=solid" & goto inputThickness
+if /i "!styleCode!"=="SD" set "style=shortDashed" & goto inputThickness
+if /i "!styleCode!"=="LD" set "style=longDashed" & goto inputThickness
+if /i "!styleCode!"=="LDSH" set "style=longDashShortDash" & goto inputThickness
+goto inputStyle
+
+:inputThickness
+
+cls
+
+echo.
+echo.
+echo VALUES SET SO FAR...
+echo.
+echo      BCG = "!bcg!"
+echo      FILTERS = "!filters!"
+echo      STYLE = "!style!"
+echo.
+echo.
+echo.
+echo.
+echo LINE THICKNESS
+echo.
+set /p thickness=Type a thickness value between 1 and 3 and press Enter: 
+
+if "!thickness!"=="" goto inputThickness
+for /f "delims=0123456789" %%a in ("!thickness!") do goto inputThickness
+if "!thickness!" lss "1" goto inputThickness
+if "!thickness!" gtr "3" goto inputThickness
+
+rem Set args
+if defined bcg (
+    set args=!bcg! !filters! !style! !thickness!
+) else (
+    set args=
+)
+
+:SelectDirectories
+
 rem Ask user to select the input directory
 
 cls
@@ -172,6 +330,8 @@ if not defined outputDir (
     exit /b
 )
 
+:testStart
+
 cls
 
 echo.
@@ -185,15 +345,22 @@ rem Process all .geojson files in the input directory
 for %%f in ("%inputDir%\*.geojson") do (
     set fileName=%%~nf
     echo !fileName!
-    python TWRCab_2_LineString.py "%%f" "%outputDir%\!fileName!.geojson"
-    echo           --- converted
+    python TWRCab_2_LineString.py "%%f" "%outputDir%\!fileName!.geojson" %args%
+    echo           --- done
     echo.
 )
 
-echo Conversion complete and saved here:
+echo.
+echo.
+echo.
+echo                         ------
+echo                          DONE
+echo                         ------
+echo.
+echo Conversion script complete and converted files saved here:
 echo %outputDir%
 echo.
-echo.
+echo Please check above for any errors that may have been encountered.
 echo.
 echo Press any key to exit...
 pause>nul
