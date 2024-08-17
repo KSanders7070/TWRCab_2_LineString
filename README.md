@@ -2,6 +2,8 @@
 
 This repository contains scripts designed to convert `Polygon` and `MultiPolygon` geometries in CRC Tower-CAB GeoJSON files into `LineString` and `MultiLineString` geometries to be used in STARS and ERAM windows. The conversion process ensures that all polygons are accurately represented as lines, including handling any interior boundaries (holes) as part of the line features.
 
+I have no plans to create a converter for ASDEX geojsons.
+
 ## Files in the Repository
 
 - **`TWRCab_2_LineString.py`**:
